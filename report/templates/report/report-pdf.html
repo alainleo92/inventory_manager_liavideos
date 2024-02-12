@@ -1,0 +1,53 @@
+{% extends "report/base-pdf.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-10 col-12 mx-auto mt-5">
+            <h1 class="text-center">{{ title }}</h1>
+            <div class="row text-center">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <td>Responsable LiaVideos: {{ tech }}</td>
+                            <td>CI: {{ tech_CI }} </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <h2>Tecnología destinada a la sala.</h2>
+        
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Producto Ordenado</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Entregado por:</th>
+                        <th scope="col">Recibido por:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if agrupado|length == 0 %}
+                    <tr>
+                        <th scope="row">-</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    {% endif %}
+
+                    {% for key, value in agrupado.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td style="text-align: center;">{{ value }}</td>
+                        <td>  </td>
+                        <td>  </td>
+                    </tr>
+                    {% endfor %}
+
+                    <th scope="col">Total</th>
+                    <th scope="col">{{ all_orders }}</th>
+                </tbody>
+            </table>
+        </div>
+    </div>        
+{% endblock %}

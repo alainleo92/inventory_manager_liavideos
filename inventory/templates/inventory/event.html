@@ -1,0 +1,64 @@
+{% extends 'inventory/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% if messages %}
+    <div class="row mt-3">
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="col-md-10 col-12 mx-auto alert alert-danger">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="col-md-10 col-12 mx-auto alert alert-success">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row mt-3">
+		<h1 class="text-center">{{ title }}</h1>
+	</div>
+
+    <div class="row">
+        <div class="col-md-10 col-12 mx-auto mt-5">
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'export-pdf' evento_id %}" class="btn btn-primary">Generar PDF</a>
+            </div>
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Producto Ordenado</th>
+                        <th scope="col">Cantidad</th>
+                    </tr>
+        
+                </thead>
+                <tbody>
+                    {% if agrupado|length == 0 %}
+                        <tr>
+                            <th scope="row">-</th>
+                            <td>-</td>                        
+                        </tr>
+                    {% endif %}
+
+                    {% for key, value in agrupado.items %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+                    <th scope="col">Total</th>
+                    <th scope="col">{{ all_orders }}</th>
+
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+{% endblock content %}
