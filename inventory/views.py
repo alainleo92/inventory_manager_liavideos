@@ -106,24 +106,6 @@ class Items(LoginRequiredMixin, ListView, FormView):
 		form.save()
 		return super().form_valid(form)
 
-#Clase para agregar un nuevo Item al inventario
-class AddItem(LoginRequiredMixin, CreateView):
-	model = InventoryItem
-	form_class = InventoryItemForm
-	template_name = 'inventory/item_form.html'
-	success_url = reverse_lazy('items')
-	success_message = "Stock has been created successfully"
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['categories'] = Category.objects.all()
-		context["title"] = 'New Item'
-		return context
-
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super().form_valid(form)
-
 #Clase para modificar un Item
 class EditItem(LoginRequiredMixin, UpdateView):
 	model = InventoryItem
@@ -158,7 +140,6 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 	template_name = 'inventory/orders.html'
 	success_url = '/orders/'
 	success_message = "Order has been created successfully"
-	# get_context_data = 'orders'
 		
 	items = InventoryItem.objects.all()
 	orders = Order.objects.all().order_by()
@@ -203,34 +184,6 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 		# 	form.save()
 		# 	return super().form_valid(form)
 			
-#Clase para agregar una orden, tiene validacion personalizada 
-class AddOrder(LoginRequiredMixin, CreateView):
-	model = Order
-	form_class = OrderForm
-	template_name = 'inventory/order_form.html'
-	success_url = reverse_lazy('orders')
-	success_message = "Order has been created successfully"
-	Items = InventoryItem.objects.all()
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context["title"] = 'New Order'
-		return context
-	
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		order_quantity = form.cleaned_data['order_quantity']
-		order_product = form.cleaned_data['product']
-		product = InventoryItem.objects.get(name=order_product)
-		
-		if product is not None and order_quantity > product.quantity:
-			messages.warning(self.request, "La cantidad a ordenar no puede ser cubierta por el inventario")
-			return self.form_invalid(form)
-		
-		product.quantity -= order_quantity
-		product.save()
-		return super().form_valid(form)
-
 #Clase para editar ua orden
 class EditOrder(LoginRequiredMixin, UpdateView):
 	model = Order
@@ -267,16 +220,32 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
 		return super().delete(self, request)
 
 #Clase para visualizar todos los eventos creados
-class Eventos(LoginRequiredMixin, View):
+class Eventos(LoginRequiredMixin, ListView, FormView):
+	model = Evento
+	form_class = EventoForm
+	template_name = 'inventory/events.html'
+	success_url = '/events/'
+	success_message = "Event has been created successfully"
+	
 	def get(self, request):
 		eventos = Evento.objects.all().order_by('id')
 		
 		context = {
 			'eventos': eventos,
-			'title': "Eventos"
+			'title': "Eventos",
+			'form': self.get_form()
 			}
-
 		return render(request, 'inventory/events.html', context)
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['form'] = self.get_form()
+		return context
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.save()
+		return super().form_valid(form)
 
 #Clase para crear un evento
 class AddEvento(LoginRequiredMixin, CreateView):
@@ -333,7 +302,7 @@ class DeleteEvento(LoginRequiredMixin, DeleteView):
 #Clase para ver las ordenes de un evento seleccionado
 class Check_Evento(LoginRequiredMixin, ListView):
 	def get(self, request, event_id):	
-		check_orders = Order.objects.filter(event=event_id).values('product__name').annotate(total=Sum('order_quantity')).order_by('product__name')		
+		check_orders = Order.objects.filter(event=event_id).values('product__name').annotate(total=Sum('order_quantity')).order_by('product__category', 'product__name')		
 		
 		agrupado = {}
 		for product in check_orders:

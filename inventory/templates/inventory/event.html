@@ -52,12 +52,14 @@
                         </tr>
                     {% endfor %}
 
-                    <th scope="col">Total</th>
-                    <th scope="col">{{ all_orders }}</th>
-
+                    <th scope="col">Total</th> 
+                    {% if all_orders == None %}
+                        <th scope="col">-</th>
+                    {% else %}
+                        <th scope="col">{{ all_orders }}</th>
+                    {% endif %}
                 </tbody>
             </table>
-            
         </div>
     </div>
 
