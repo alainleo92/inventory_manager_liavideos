@@ -247,23 +247,6 @@ class Eventos(LoginRequiredMixin, ListView, FormView):
 		form.save()
 		return super().form_valid(form)
 
-#Clase para crear un evento
-class AddEvento(LoginRequiredMixin, CreateView):
-	model = Evento
-	form_class = EventoForm
-	template_name = 'inventory/event_form.html'
-	success_url = reverse_lazy('events')
-	success_message = "Event has been created successfully"
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context["title"] = 'New Event'
-		return context
-
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super().form_valid(form)
-
 #Clase para editar un evento
 class EditEvento(LoginRequiredMixin, UpdateView):
 	model = Evento

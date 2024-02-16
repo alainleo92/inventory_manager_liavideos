@@ -10,7 +10,6 @@ from .views import (
     EditOrder, 
     DeleteOrder, 
     Eventos, 
-    AddEvento, 
     EditEvento, 
     DeleteEvento, 
     Check_Evento)
@@ -27,7 +26,6 @@ urlpatterns = [
     path('edit-order/<int:pk>', EditOrder.as_view(), name='edit-order'),
     path('delete-order/<int:pk>', DeleteOrder.as_view(), name='delete-order'),
     path('events/', Eventos.as_view(), name='events'),
-    path('add-event/', AddEvento.as_view(), name='add-event'),
     path('edit-event/<int:pk>', EditEvento.as_view(), name='edit-event'),
     path('delete-event/<int:pk>', DeleteEvento.as_view(), name='delete-event'),
     path('signup/', SignUpView.as_view(), name='signup'),
