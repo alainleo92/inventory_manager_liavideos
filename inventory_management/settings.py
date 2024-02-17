@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'users',
     'orders',
     'events',
+    'dashboard',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.admin',

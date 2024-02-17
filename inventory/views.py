@@ -2,39 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView, ListView, FormView
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import InventoryItemForm, forms
 from .models import InventoryItem, Category, Order, Evento
 from inventory_management.settings import LOW_QUANTITY
 from django.contrib import messages
 from django.http import JsonResponse
-
-
-#Clase para ver un resumen de todo 
-class Dashboard(LoginRequiredMixin, View):
-	def get(self, request):
-		users = User.objects.all()[:2]
-		items = InventoryItem.objects.all()[:3]
-		orders = Order.objects.all()[0:3]
-		eventos = Evento.objects.all()[0:3]
-		reg_user = len(User.objects.all())
-		all_prods = len(InventoryItem.objects.all())
-		all_orders = len(Order.objects.all())
-		all_events = len(Evento.objects.all())
-
-		context = {
-        	"users": users,
-        	"items": items,
-			"orders": orders,
-			"eventos": eventos,
-        	"count_users": reg_user,
-        	"count_products": all_prods,
-			"count_orders": all_orders,
-			"count_events": all_events,
-			'title': "Dashboard" 
-    	}
-		return render(request, "inventory/dashboard.html", context)
 
 #Clase para visualizar todos los productos del inventario y se emite una alerta sobre bajo inventario
 class Items(LoginRequiredMixin, ListView, FormView):
