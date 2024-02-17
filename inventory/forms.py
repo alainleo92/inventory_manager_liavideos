@@ -11,13 +11,6 @@ from .models import Order, InventoryItem, Evento
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Field
 
-class UserRegisterForm(UserCreationForm):
-	email = forms.EmailField()
-
-	class Meta:
-		model = User
-		fields = ['username', 'email', 'password1', 'password2']
-
 class InventoryItemForm(forms.ModelForm):
 	# category = forms.ModelChoiceField(queryset=Category.objects.all(), initial=0)
 	class Meta:
@@ -33,22 +26,6 @@ class InventoryItemForm(forms.ModelForm):
 			Field('category', label='Categoria', css_class='form-group'),
 			Field('localitation', label='Localizacion del producto', css_class='form-group', row=3, widget=forms.Textarea)
 		)
-
-class OrderForm(forms.ModelForm):
-	class Meta:
-		model = Order
-		fields = ['event', 'product', 'order_quantity']
-
-	def __init__(self, *args, **kwargs):
-		super(OrderForm, self).__init__(*args, **kwargs)
-		# self.helper = FormHelper()
-		# self.helper.layout = Layout(
-		# 	Field('even', label="Nombre del evento", 
-
-		# 	)
-		# )
-
-		self.fields['product'].queryset = InventoryItem.objects.filter(quantity__gt=0).order_by('name')
 
 class EventoForm(forms.ModelForm):
 	class Meta:

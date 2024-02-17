@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, View, CreateView, UpdateView, Del
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserRegisterForm, InventoryItemForm, OrderForm, EventoForm, forms
+from .forms import InventoryItemForm, EventoForm, forms
 from .models import InventoryItem, Category, Order, Evento
 from inventory_management.settings import LOW_QUANTITY
 from django.contrib import messages
@@ -108,92 +108,6 @@ class DeleteItem(LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('items')
 	context_object_name = 'item'
 	success_message = "Stock has been deleted successfully"
-
-#Clase para listar todas las ordenes a Items creadas
-class Orders(LoginRequiredMixin, ListView, FormView):
-	model = Order
-	form_class = OrderForm
-	template_name = 'inventory/orders.html'
-	success_url = '/orders/'
-	success_message = "Order has been created successfully"
-		
-	items = InventoryItem.objects.all()
-	orders = Order.objects.all().order_by()
-
-	def get(self, request):
-		orders = Order.objects.all().order_by('-date', 'event')	
-		return render(request, 'inventory/orders.html', {'orders': orders, 'title': "Orders", 'form': self.get_form()})
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context["items"] = self.items
-		context["orders"] = self.orders
-		context['form'] = self.get_form()
-		context["title"] = 'Orders'
-		return context
-	
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		order_quantity = form.cleaned_data['order_quantity']
-		order_product = form.cleaned_data['product']
-		order_event = form.cleaned_data['event']
-
-		product = InventoryItem.objects.get(name=order_product)
-		
-		if product is not None and order_quantity > product.quantity:
-			messages.warning(self.request, "La cantidad a ordenar no puede ser cubierta por el inventario")
-			return self.form_invalid(form)
-
-		product.quantity -= order_quantity
-		product.save()
-		form.save()
-		return super().form_valid(form)
-		
-		
-		# # order = Order.objects.get(product=order_product, event=order_event)
-		
-		# if Order.objects.get(product=order_product, event=order_event) is not None:
-		# 	order = Order.objects.get(product=order_product, event=order_event)
-		# 	order.order_quantity += order_quantity
-		# 	order.save()
-		# else:
-		# 	form.save()
-		# 	return super().form_valid(form)
-			
-#Clase para editar ua orden
-class EditOrder(LoginRequiredMixin, UpdateView):
-	model = Order
-	form_class = OrderForm
-	template_name = 'inventory/order_form.html'
-	success_url = reverse_lazy('orders')
-	success_message = "Order has been edited successfully"
-
-	def get_context_data(self, **kwargs):                                               
-		context = super().get_context_data(**kwargs)
-		context["title"] = 'Edit Order'
-		context["savebtn"] = 'Update Order'
-		context["delbtn"] = 'Delete Order'
-		return context
-
-#Clase para eliminar una orden
-class DeleteOrder(LoginRequiredMixin, DeleteView):
-	model = Order
-	template_name = 'inventory/delete_order.html'
-	success_url = reverse_lazy('orders')
-	context_object_name = 'order'
-	success_message = "Order has been deleted successfully"
-	Items = InventoryItem.objects.all()
-
-	def post(self, request, pk):
-		order = self.get_object()
-		order_id = pk
-		print(order_id)
-		
-		product = get_object_or_404(self.Items, name=order.product)
-		print(product)
-		product.quantity += order.order_quantity
-		product.save()
-		return super().delete(self, request)
 
 #Clase para visualizar todos los eventos creados
 class Eventos(LoginRequiredMixin, ListView, FormView):
