@@ -11,30 +11,6 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
 
-class Index(TemplateView):
-	template_name = 'inventory/login.html'
-
-#Clase para registrar un nuevo usuario
-class SignUpView(View):
-	def get(self, request):
-		form = UserRegisterForm()
-		return render(request, 'inventory/signup.html', {'form': form})
-
-	def post(self, request):
-		form = UserRegisterForm(request.POST)
-
-		if form.is_valid():
-			form.save()
-			user = authenticate(
-				username=form.cleaned_data['username'],
-				password=form.cleaned_data['password1']
-			)
-
-			login(request, user)
-			return redirect('index')
-
-		return render(request, 'inventory/signup.html', {'form': form, 'title': "Signup"})
-
 #Clase para ver un resumen de todo 
 class Dashboard(LoginRequiredMixin, View):
 	def get(self, request):

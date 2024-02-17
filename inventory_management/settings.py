@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-w07&5gwrdk==i^43uy8szu2ftmy_-izw!_-((jd!p-e5l)whj6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.161',
-                 '127.0.0.1',]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -34,6 +33,7 @@ ALLOWED_HOSTS = ['192.168.43.161',
 INSTALLED_APPS = [
     'inventory',
     'report',
+    'users',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.admin',
@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 

@@ -1,8 +1,5 @@
-from django.contrib import admin
 from django.urls import path
 from .views import (
-    Index, 
-    SignUpView, 
     Items,  
     EditItem, 
     DeleteItem, 
@@ -13,10 +10,8 @@ from .views import (
     EditEvento, 
     DeleteEvento, 
     Check_Evento)
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', auth_views.LoginView.as_view(template_name='inventory/login.html'), name='index'),
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
     path('items/', Items.as_view(), name='items'),
     path('edit-item/<int:pk>', EditItem.as_view(), name='edit-item'),
@@ -28,7 +23,4 @@ urlpatterns = [
     path('events/', Eventos.as_view(), name='events'),
     path('edit-event/<int:pk>', EditEvento.as_view(), name='edit-event'),
     path('delete-event/<int:pk>', DeleteEvento.as_view(), name='delete-event'),
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('login/', auth_views.LoginView.as_view(template_name='inventory/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='inventory/logout.html'), name='logout'),
 ]
