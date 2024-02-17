@@ -6,7 +6,7 @@ from django.views.generic import View
 from xhtml2pdf import pisa
 from io import BytesIO
 from inventory.models import InventoryItem, Order, Evento, Category
-from inventory.views import Check_Evento
+from events.views import Check_Evento
 from django.db.models import Sum
 
 # Create your views here.

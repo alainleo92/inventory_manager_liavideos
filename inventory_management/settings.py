@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'report',
     'users',
     'orders',
+    'events',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.admin',

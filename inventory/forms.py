@@ -26,8 +26,3 @@ class InventoryItemForm(forms.ModelForm):
 			Field('category', label='Categoria', css_class='form-group'),
 			Field('localitation', label='Localizacion del producto', css_class='form-group', row=3, widget=forms.Textarea)
 		)
-
-class EventoForm(forms.ModelForm):
-	class Meta:
-		model = Evento
-		fields = ['name', 'description', 'localitation', 'tech', 'tech_CI']
