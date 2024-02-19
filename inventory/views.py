@@ -15,7 +15,7 @@ class Items(LoginRequiredMixin, ListView, FormView):
 	model = InventoryItem
 	form_class = InventoryItemForm
 	items = InventoryItem.objects.all().order_by('name')
-	template_name = 'inventory/items.html'
+	template_name = 'items/items.html'
 	success_url = '/items/'
 	success_message = "Stock has been created successfully"
 	
@@ -35,7 +35,7 @@ class Items(LoginRequiredMixin, ListView, FormView):
 		).values_list('id', flat=True)
 
 		consulta = self.items
-		paginacion = Paginator(consulta,10)
+		paginacion = Paginator(consulta,8)
 		page_number = request.GET.get('page')
 		consulta = paginacion.get_page(page_number)
 		
@@ -47,7 +47,7 @@ class Items(LoginRequiredMixin, ListView, FormView):
 			'page_obj' : consulta
 			}
 
-		return render(request, 'inventory/items.html', context)
+		return render(request, 'items/items.html', context)
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
@@ -58,7 +58,7 @@ class Items(LoginRequiredMixin, ListView, FormView):
 class EditItem(LoginRequiredMixin, UpdateView):
 	model = InventoryItem
 	form_class = InventoryItemForm
-	template_name = 'inventory/item_form.html'
+	template_name = 'items/item_form.html'
 	success_url = reverse_lazy('items')
 	success_message = "Item has been modified successfully"
 
@@ -76,7 +76,7 @@ class EditItem(LoginRequiredMixin, UpdateView):
 #Clase para eliminar un Item
 class DeleteItem(LoginRequiredMixin, DeleteView):
 	model = InventoryItem
-	template_name = 'inventory/delete_item.html'
+	template_name = 'items/delete_item.html'
 	success_url = reverse_lazy('items')
 	context_object_name = 'item'
 	success_message = "Stock has been deleted successfully"

@@ -13,21 +13,21 @@
 			{{ message }}
 		</div>
 	{% endif %}
-	{% endfor %}
+	{% endfor %}	
 
-	<a href="{% url 'events' %}" class="btn btn-outline-primary my-3 mx-4">Go Back</a>
+	<a href="{% url 'items' %}" class="btn btn-outline-primary my-3 mx-4">Go Back</a>
 	
 	<div class="row">
 		<div class="col-11 col-md-4 mx-auto mt-5">
-			<h1>Eventos</h1>
+			<h1>Inventory Item</h1>
 
 			<form method="POST">
 				{% csrf_token %}
 				{{ form|crispy }}
 
 				<div class="mt-3">
-					<{% if title == "New Event" %}
-                	<button class="btn btn-primary">Add Event</button>
+					{% if title == "New Item" %}
+                	<button class="btn btn-primary">Add Item</button>
             		{% else %}
 					<button type="submit" class="btn btn-primary">{{ savebtn }}</button>
 					{% endif %}
