@@ -1,10 +1,4 @@
 **/db.sqlite3
 
-**.pyc
-\inventory\__pycache__\.*pyc
-\dashboard\__pycache__\.*pyc
-\events\__pycache__\.*pyc
-\orders\__pycache__\.*pyc
-\report\__pycache__\.*pyc
-\users\__pycache__\.*pyc
-\inventory_management\__pycache__\.*pyc
+*__pycache__
+migrations/
