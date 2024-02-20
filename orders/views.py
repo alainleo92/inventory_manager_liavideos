@@ -5,6 +5,7 @@ from inventory.models import InventoryItem, Order
 from .forms import OrderForm
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.core.paginator import Paginator
 
 # Create your views here.
 class Index(TemplateView):
@@ -22,16 +23,21 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 	orders = Order.objects.all().order_by()
 
 	def get(self, request):
-		orders = Order.objects.all().order_by('-date', 'event')	
-		return render(request, 'orders/orders.html', {'orders': orders, 'title': "Orders", 'form': self.get_form()})
+		
+		orders = Order.objects.all().order_by('-date', 'event')
+		paginacion = Paginator(orders,20)
+		page_number = request.GET.get('page')
+		orders = paginacion.get_page(page_number)
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context["items"] = self.items
-		context["orders"] = self.orders
-		context['form'] = self.get_form()
-		context["title"] = 'Orders'
-		return context
+		context = {
+			'orders': orders, 
+			'title': "Orders", 
+			'form': self.get_form(),
+			'items': self.items,
+			'page_obj' : orders,
+		}
+		
+		return render(request, 'orders/orders.html', context)
 	
 	def form_valid(self, form):
 		form.instance.user = self.request.user
