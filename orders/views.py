@@ -29,12 +29,14 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 		page_number = request.GET.get('page')
 		orders = paginacion.get_page(page_number)
 
+		print(len(self.items))
+
 		context = {
 			'orders': orders, 
 			'title': "Orders", 
 			'form': self.get_form(),
 			'items': self.items,
-			'page_obj' : orders,
+			'page_obj' : orders
 		}
 		
 		return render(request, 'orders/orders.html', context)
