@@ -21,7 +21,7 @@
 	
 	<div class="container">
 		<div class="row">
-			{% if user.is_staff and user.is_superuser %}
+			{% if user.is_staff or user.is_superuser %}
 			<div class="col-md-4 col-8 mx-auto mt-5">
 				<h1>Add Item</h1>
 
