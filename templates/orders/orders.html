@@ -66,7 +66,7 @@
 							<td>{{ order.user.username }}</td>
 							<td>{{ order.date }}</td>
 
-							{% if user.is_staff and user.is_superuser or user.username == order.user.username %}
+							{% if user.is_staff or user.is_superuser or user.username == order.user.username %}
 							<td><a href="{% url 'delete-order' order.id %}" class="btn btn-secondary">Delete</a></td>
 							{% endif %}
 						</tr>
