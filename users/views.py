@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, TemplateView
+from django.views.generic import View
 from django.contrib.auth import authenticate, login
 from .forms import UserRegisterForm
 
 # Create your views here.
-class Index(TemplateView):
-	template_name = 'users/login.html'
 class SignUpView(View):
 	def get(self, request):
 		form = UserRegisterForm()

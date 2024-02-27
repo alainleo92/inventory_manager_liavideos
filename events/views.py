@@ -1,14 +1,10 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, FormView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from inventory.models import InventoryItem, Order, Evento
 from .forms import EventoForm
 from django.db.models import Sum
-
-# Create your views here.
-class Index(TemplateView):
-	template_name = 'events/events.html'
 
 #Clase para visualizar todos los eventos creados
 class Eventos(LoginRequiredMixin, ListView, FormView):

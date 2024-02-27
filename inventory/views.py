@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, DeleteView, ListView, FormView
+from django.views.generic import UpdateView, DeleteView, ListView, FormView, TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import InventoryItemForm
@@ -9,6 +9,10 @@ from .models import InventoryItem, Category
 from inventory_management.settings import LOW_QUANTITY
 from django.contrib import messages
 from django.core.paginator import Paginator
+
+# Create your views here.
+class Index(TemplateView):
+	template_name = 'items/index.html'
 
 #Clase para visualizar todos los productos del inventario y se emite una alerta sobre bajo inventario
 class Items(LoginRequiredMixin, ListView, FormView):
