@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 class Index(TemplateView):
-	template_name = 'dashboard/dash.html'
+	template_name = 'dashboard/index.html'
 
 #Clase para ver un resumen de todo 
 class Dashboard(LoginRequiredMixin, View):
