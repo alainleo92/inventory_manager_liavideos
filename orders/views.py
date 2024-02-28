@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, FormView, UpdateView, DeleteView, TemplateView
 from inventory.models import InventoryItem, Order
@@ -57,7 +57,8 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 		
 		if product is not None and order_quantity > product.quantity:
 			messages.warning(self.request, "La cantidad a ordenar no puede ser cubierta por el inventario")
-			return self.form_invalid(form)
+			return redirect('orders')
+			# return self.form_invalid(form)
 
 		product.quantity -= order_quantity
 		product.save()
@@ -91,10 +92,8 @@ class DeleteOrder(LoginRequiredMixin, DeleteView):
 	def post(self, request, pk):
 		order = self.get_object()
 		order_id = pk
-		print(order_id)
 		
 		product = get_object_or_404(self.Items, name=order.product)
-		print(product)
 		product.quantity += order.order_quantity
 		product.save()
 		return super().delete(self, request)
