@@ -29,8 +29,6 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 		page_number = request.GET.get('page')
 		orders = paginacion.get_page(page_number)
 
-		print(len(self.items))
-
 		context = {
 			'orders': orders, 
 			'title': "Orders", 
@@ -38,6 +36,14 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 			'items': self.items,
 			'page_obj' : orders
 		}
+
+		query = self.request.GET.get('q_orders')
+		if query:
+			items = InventoryItem.objects.filter(name__icontains=query)
+			orders = Order.objects.filter(product_id__in=items)
+
+			context['orders'] = orders
+			context['page_obj'] = orders
 		
 		return render(request, 'orders/orders.html', context)
 	
