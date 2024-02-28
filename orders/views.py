@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, FormView, UpdateView, DeleteView, TemplateView
-from inventory.models import InventoryItem, Order
+from inventory.models import InventoryItem, Order, Evento
 from .forms import OrderForm
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -39,11 +39,20 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 
 		query = self.request.GET.get('q_orders')
 		if query:
-			items = InventoryItem.objects.filter(name__icontains=query)
-			orders = Order.objects.filter(product_id__in=items)
+			items_name = InventoryItem.objects.filter(name__icontains=query)	
+			events = Evento.objects.filter(name__icontains=query)
+			orders = Order.objects.filter(product_id__in=items_name)
+			# print(events)
 
-			context['orders'] = orders
-			context['page_obj'] = orders
+			if items_name:
+				queryset = Order.objects.filter(product_id__in=items_name)
+			elif events:
+				queryset = Order.objects.filter(event_id__in=events)
+			else: 
+				queryset = Order.objects.none()
+
+			context['orders'] = queryset
+			context['page_obj'] = queryset
 		
 		return render(request, 'orders/orders.html', context)
 	
