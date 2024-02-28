@@ -19,15 +19,12 @@
 		</div>
 	{% endif %}
 	{% if user.is_staff or user.is_superuser or user.username == order.user.username %}
-			<div class="col-md-2 col-4 mx-auto mt-5">
-				<h1>Dime que producto ordenado buscas {{ user.username }}?</h1>
-
+			<div class="row mx-auto mt-5">
 				<form method="GET">
-					<input type="text" name="q_orders" placeholder="Buscar orden">
-
-						<div class="mt-3">
+					<input type="text" name="q_orders" placeholder="Buscar item ordenado">
+						<!-- <div class="mt-3"> -->
 							<button type="submit">Buscar</button>
-						</div>
+						<!-- </div> -->
 				</form>
 			</div>
 		{% endif %}

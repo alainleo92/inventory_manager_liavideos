@@ -18,15 +18,15 @@
 		{% endfor %}
 	
 		{% if user.is_staff or user.is_superuser %}
-			<div class="col-md-2 col-4 mx-auto mt-5">
-				<h1>Dime que buscas {{ user.username }}?</h1>
+			<div class="row mx-auto mt-5">
+				<!-- <h1>Dime que buscas {{ user.username }}?</h1> -->
 
 				<form method="GET">
 					<input type="text" name="q" placeholder="Buscar producto">
 
-						<div class="mt-3">
+						<!-- <div class="mt-3"> -->
 							<button type="submit">Buscar</button>
-						</div>
+						<!-- </div> -->
 				</form>
 			</div>
 		{% endif %}
