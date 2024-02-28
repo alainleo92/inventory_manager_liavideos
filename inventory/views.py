@@ -51,8 +51,23 @@ class Items(LoginRequiredMixin, ListView, FormView):
 
 		query = self.request.GET.get('q')
 		if query:
-			context['items']=InventoryItem.objects.filter(name__icontains=query)
-			context['page_obj']=InventoryItem.objects.filter(name__icontains=query)
+			items_names=InventoryItem.objects.filter(name__icontains=query)
+			items_category=Category.objects.filter(name__icontains=query)
+			# print(items_names)
+			# print(items_category)
+
+			if items_names and items_category:
+				queryset=InventoryItem.objects.filter(name__icontains=query, category_id__in=items_category)
+				# print(queryset)
+			elif items_names:
+				queryset=InventoryItem.objects.filter(name__icontains=query)
+			elif items_category:
+				queryset=InventoryItem.objects.filter(category_id__in=items_category)
+			else:
+				queryset=InventoryItem.objects.none()
+
+			context['items']=queryset
+			context['page_obj']=queryset
 			
 		return render(request, 'items/items.html', context)
 
