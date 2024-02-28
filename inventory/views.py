@@ -35,7 +35,7 @@ class Items(LoginRequiredMixin, ListView, FormView):
 		low_inventory_ids = InventoryItem.objects.filter(
 			quantity__lte=LOW_QUANTITY
 		).values_list('id', flat=True)
-
+	
 		consulta = self.items
 		paginacion = Paginator(consulta,8)
 		page_number = request.GET.get('page')
@@ -46,9 +46,14 @@ class Items(LoginRequiredMixin, ListView, FormView):
 			'low_inventory_ids': low_inventory_ids,
 			'title': "Items",
 			'form': self.get_form(),
-			'page_obj' : consulta
+			'page_obj' : consulta,
 			}
 
+		query = self.request.GET.get('q')
+		if query:
+			context['items']=InventoryItem.objects.filter(name__icontains=query)
+			context['page_obj']=InventoryItem.objects.filter(name__icontains=query)
+			
 		return render(request, 'items/items.html', context)
 
 	def form_valid(self, form):
@@ -82,3 +87,4 @@ class DeleteItem(LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('items')
 	context_object_name = 'item'
 	success_message = "Stock has been deleted successfully"
+
