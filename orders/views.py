@@ -45,7 +45,7 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 			# print(events)
 
 			if items_name:
-				queryset = Order.objects.filter(product_id__in=items_name)
+				queryset = Order.objects.filter(product_id__in=items_name).order_by('event')
 			elif events:
 				queryset = Order.objects.filter(event_id__in=events)
 			else: 
