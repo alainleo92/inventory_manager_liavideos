@@ -1,8 +1,8 @@
-### INVENTORY MANAGER
+# INVENTORY MANAGER
 
 El control de la tecnología necesaria para la realización de un evento es de vital importancia a medida que se va complejizando en cuanto a la cantidad de puntos y personas que son responsables de la técnica, es por ello que se decide crear un sistema de manejo de inventario que ayude al equipo administrativo y de producción a gestionar de una mejor manera lo recursos disponibles.
 
-# Qué funcionalidades brinda este sistema?
+## Qué funcionalidades brinda este sistema?
 1. Control de usuario según sus privilegios (superuser, manager, staff)
 2. Visualización de las estadísticas generales en un dashboarb.
 3. Posibilidad de listar, agregar, editar y eliminar los productos de propiedad de la empresa.
