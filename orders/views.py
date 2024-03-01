@@ -23,37 +23,21 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 	orders = Order.objects.all().order_by()
 
 	def get(self, request):
-		
-		orders = Order.objects.all().order_by('-date', 'event')
-		paginacion = Paginator(orders,20)
-		page_number = request.GET.get('page')
-		orders = paginacion.get_page(page_number)
 
-		context = {
-			'orders': orders, 
-			'title': "Orders", 
-			'form': self.get_form(),
-			'items': self.items,
-			'page_obj' : orders
-		}
+		consulta = self.paginas(Order.objects.all().order_by('-date', 'event'))
 
 		query = self.request.GET.get('q_orders')
 		if query:
-			items_name = InventoryItem.objects.filter(name__icontains=query)	
-			events = Evento.objects.filter(name__icontains=query)
-			orders = Order.objects.filter(product_id__in=items_name)
-			# print(events)
+			consulta = self.search_box(query)
 
-			if items_name:
-				queryset = Order.objects.filter(product_id__in=items_name).order_by('event')
-			elif events:
-				queryset = Order.objects.filter(event_id__in=events)
-			else: 
-				queryset = Order.objects.none()
+		context = {
+			'orders': consulta, 
+			'title': "Orders", 
+			'form': self.get_form(),
+			'items': self.items,
+			'page_obj' : consulta
+		}
 
-			context['orders'] = queryset
-			context['page_obj'] = queryset
-		
 		return render(request, 'orders/orders.html', context)
 	
 	def form_valid(self, form):
@@ -73,7 +57,28 @@ class Orders(LoginRequiredMixin, ListView, FormView):
 		product.save()
 		form.save()
 		return super().form_valid(form)
-			
+	
+	def paginas(self, query):
+		queryset = query
+		paginacion = Paginator(queryset,15)
+		page_number = self.request.GET.get('page')
+		queryset = paginacion.get_page(page_number)
+
+		return queryset
+
+	def search_box(self, query):
+			items_name = InventoryItem.objects.filter(name__icontains=query)	
+			events = Evento.objects.filter(name__icontains=query)
+			orders = Order.objects.filter(product_id__in=items_name)
+			# print(events)
+
+			if items_name:
+				return Order.objects.filter(product_id__in=items_name).order_by('event')
+			elif events:
+				return Order.objects.filter(event_id__in=events)
+			else: 
+				return Order.objects.none()
+					
 #Clase para editar ua orden
 class EditOrder(LoginRequiredMixin, UpdateView):
 	model = Order

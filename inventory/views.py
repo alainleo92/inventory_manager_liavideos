@@ -36,10 +36,11 @@ class Items(LoginRequiredMixin, ListView, FormView):
 			quantity__lte=LOW_QUANTITY
 		).values_list('id', flat=True)
 	
-		consulta = self.items
-		paginacion = Paginator(consulta,8)
-		page_number = request.GET.get('page')
-		consulta = paginacion.get_page(page_number)
+		consulta = self.paginas(self.items)
+
+		query = self.request.GET.get('q')
+		if query:
+			consulta = self.search_box(query)
 		
 		context = {
 			'items': consulta, 
@@ -47,34 +48,37 @@ class Items(LoginRequiredMixin, ListView, FormView):
 			'title': "Items",
 			'form': self.get_form(),
 			'page_obj' : consulta,
-			}
-
-		query = self.request.GET.get('q')
-		if query:
-			items_names=InventoryItem.objects.filter(name__icontains=query)
-			items_category=Category.objects.filter(name__icontains=query)
-			# print(items_names)
-			# print(items_category)
-
-			if items_names and items_category:
-				queryset=InventoryItem.objects.filter(name__icontains=query, category_id__in=items_category)
-				# print(queryset)
-			elif items_names:
-				queryset=InventoryItem.objects.filter(name__icontains=query)
-			elif items_category:
-				queryset=InventoryItem.objects.filter(category_id__in=items_category)
-			else:
-				queryset=InventoryItem.objects.none()
-
-			context['items']=queryset
-			context['page_obj']=queryset
-			
+			}	
 		return render(request, 'items/items.html', context)
 
 	def form_valid(self, form):
 		form.instance.user = self.request.user
 		form.save()
 		return super().form_valid(form)
+	
+	def paginas(self, query):
+		queryset = query
+		paginacion = Paginator(queryset,8)
+		page_number = self.request.GET.get('page')
+		queryset = paginacion.get_page(page_number)
+
+		return queryset
+	
+	def search_box(self, query):
+			items_names=InventoryItem.objects.filter(name__icontains=query)
+			items_category=Category.objects.filter(name__icontains=query)
+			# print(items_names)
+			# print(items_category)
+
+			if items_names and items_category:
+				return InventoryItem.objects.filter(name__icontains=query, category_id__in=items_category)
+				# print(queryset)
+			elif items_names:
+				return InventoryItem.objects.filter(name__icontains=query)
+			elif items_category:
+				return InventoryItem.objects.filter(category_id__in=items_category)
+			else:
+				return InventoryItem.objects.none()
 	
 #Clase para modificar un Item
 class EditItem(LoginRequiredMixin, UpdateView):
